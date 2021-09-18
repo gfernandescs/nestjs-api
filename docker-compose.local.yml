@@ -1,0 +1,25 @@
+version: '3'
+services:
+  nestjs-api:
+    build: .
+    entrypoint: dockerize -wait tcp://nestjs_api_database_host:5432 -timeout 40s ./.docker/entrypoint.local.sh
+    container_name: nestjs-api
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - nestjs_api_database_host
+
+  nestjs_api_database_host:
+    build: .docker/postgres
+    container_name: nestjs_api_database_host
+    ports:
+      - 5432:5432
+    restart: always
+    tty: true
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=nestjs_api_database
+    volumes:
+      - .docker/dbdata:/var/lib/postgresql/data
