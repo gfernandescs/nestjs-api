@@ -8,9 +8,10 @@ export class CreateUsersTable1631203189953 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'varchar',
+            type: 'integer',
             isPrimary: true,
-            generationStrategy: 'uuid',
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'name',
