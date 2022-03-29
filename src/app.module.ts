@@ -8,6 +8,7 @@ import { User } from './users/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Module({
   imports: [
@@ -20,6 +21,8 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
       password: process.env.TYPEORM_PASSWORD,
       database: process.env.TYPEORM_DATABASE,
       entities: [User],
+      synchronize: false,
+      namingStrategy: new SnakeNamingStrategy(),
     }),
     UsersModule,
     AuthModule,

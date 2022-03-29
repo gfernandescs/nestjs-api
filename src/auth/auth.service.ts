@@ -11,7 +11,9 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne({ where: { name: username } });
+    const user = await this.usersService.findOne({
+      where: { email: username },
+    });
 
     if (await user?.validatePassword(pass)) {
       return user;
@@ -21,11 +23,12 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const payload = { username: user.name, sub: user.id };
+    const payload = { sub: user.id, username: user.name, roles: user.roles };
 
     return {
       id: user.id,
       name: user.name,
+      roles: user.roles,
       accessToken: this.jwtService.sign(payload),
     };
   }

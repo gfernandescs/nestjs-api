@@ -27,23 +27,23 @@ export abstract class BaseService<TEntity> {
   }
 
   async findOne(options: IListOptions): Promise<TEntity> {
-    return getRepository<TEntity>(this.entityClass).findOneOrFail(options);
+    return getRepository<TEntity>(this.entityClass).findOne(options);
   }
 
-  async findById(id: number): Promise<TEntity> {
-    return getRepository<TEntity>(this.entityClass).findOneOrFail({
+  async findById(id: string): Promise<TEntity> {
+    return getRepository<TEntity>(this.entityClass).findOne({
       where: { id },
     });
   }
 
-  async update(id: number, updateDto: DeepPartial<TEntity>) {
+  async update(id: string, updateDto: DeepPartial<TEntity>) {
     return getRepository<TEntity>(this.entityClass).save({
       id,
       ...updateDto,
     });
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     return getRepository<TEntity>(this.entityClass).delete(id);
   }
 
