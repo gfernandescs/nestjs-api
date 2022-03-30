@@ -4,23 +4,23 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from '../auth/auth.decorator';
 import { QueryStringUserDto } from './dto/query-string-user.dto';
-import { BaseController } from '../base.controller';
 import { User } from './entities/user.entity';
+import { ControllerFactory } from '../common/factories/controller.factory';
 
 @Controller('users')
-export class UsersController extends BaseController<
+export class UsersController extends ControllerFactory<
   User,
   CreateUserDto,
   UpdateUserDto,
   QueryStringUserDto
-> {
-  constructor(private readonly usersService: UsersService) {
-    super(usersService);
+>(CreateUserDto, UpdateUserDto, QueryStringUserDto) {
+  constructor(protected service: UsersService) {
+    super();
   }
 
   @Public()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    return this.service.create(createUserDto);
   }
 }
