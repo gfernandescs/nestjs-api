@@ -1,32 +1,39 @@
 import { DeepPartial, getRepository, ObjectLiteral } from 'typeorm';
+import { EntityFieldsNames } from 'typeorm/common/EntityFieldsNames';
+import { FindConditions } from 'typeorm/find-options/FindConditions';
 
-interface IListOptions {
-  where?: ObjectLiteral | string | any;
+interface IListOptions<TEntity> {
+  where?:
+    | FindConditions<TEntity>[]
+    | FindConditions<TEntity>
+    | ObjectLiteral
+    | string
+    | any;
   relations?: string[];
-  order?: any;
+  order?: {
+    [P in EntityFieldsNames<TEntity>]?: 'ASC' | 'DESC' | 1 | -1;
+  };
   pagination?: { skip?: number; take?: number };
+
+  select?: EntityFieldsNames<TEntity>[] | (keyof TEntity)[];
 }
 
 export abstract class BaseService<TEntity> {
-  private entityClass: string;
-
-  protected constructor(entityClass: string) {
-    this.entityClass = entityClass;
-  }
+  protected constructor(protected readonly entityClass: string) {}
 
   async create(createDto: DeepPartial<TEntity>) {
     return getRepository<TEntity>(this.entityClass).save(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      getRepository<TEntity>(this.entityClass).create(createDto),
+      getRepository<TEntity>(this.entityClass).create(
+        createDto,
+      ) as DeepPartial<TEntity>,
     );
   }
 
-  async findAll(options: IListOptions) {
+  async findAll(options: IListOptions<TEntity>) {
     return this.findAndCount(options);
   }
 
-  async findOne(options: IListOptions): Promise<TEntity> {
+  async findOne(options: IListOptions<TEntity>): Promise<TEntity> {
     return getRepository<TEntity>(this.entityClass).findOne(options);
   }
 
@@ -37,24 +44,26 @@ export abstract class BaseService<TEntity> {
   }
 
   async update(id: string, updateDto: DeepPartial<TEntity>) {
-    return getRepository<TEntity>(this.entityClass).save({
-      id,
-      ...updateDto,
-    });
+    return getRepository<TEntity>(this.entityClass).save(
+      getRepository<TEntity>(this.entityClass).create({
+        id,
+        ...updateDto,
+      }) as DeepPartial<TEntity>,
+    );
   }
 
   async remove(id: string) {
     return getRepository<TEntity>(this.entityClass).delete(id);
   }
 
-  private async findAndCount(options: IListOptions) {
-    const { conditions, pagination, order } = this.getQuery(options);
+  private async findAndCount(options: IListOptions<TEntity>) {
+    const { where, pagination, order, relations } = this.getQuery(options);
 
     const [result, count] = await getRepository<TEntity>(
       this.entityClass,
     ).findAndCount({
-      where: conditions,
-      relations: options.relations,
+      where,
+      relations,
       order,
       ...pagination,
     });
@@ -65,37 +74,13 @@ export abstract class BaseService<TEntity> {
     };
   }
 
-  private getQuery(options: IListOptions) {
-    let { pagination } = options;
-    const { order } = options;
+  private getQuery(options: IListOptions<TEntity>) {
+    const { order, relations, where, pagination } = options;
 
-    const conditions = options.where;
-
-    if (Array.isArray(conditions)) {
-      conditions.map((i) => {
-        delete i?.pagination;
-        delete i?.sortBy;
-        delete i?.orderBy;
-      });
-    } else {
-      delete conditions?.pagination;
-      delete conditions?.sortBy;
-      delete conditions?.orderBy;
+    if (pagination.take >= 100) {
+      pagination.take = 100;
     }
 
-    if (pagination?.take && pagination?.take <= 100) {
-      pagination = { ...pagination, take: pagination.take };
-    } else {
-      pagination = { ...pagination, take: 100 };
-    }
-
-    if (pagination?.skip) {
-      pagination = {
-        ...pagination,
-        skip: (pagination.skip - 1) * pagination.take,
-      };
-    }
-
-    return { conditions, pagination, order };
+    return { where, pagination, order, relations };
   }
 }
