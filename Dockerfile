@@ -2,6 +2,7 @@ FROM node:16.14.2-alpine
 
 RUN apk add --no-cache bash
 
+#RUN npm i -g @nestjs/cli@8.2.4 npm-check-updates
 RUN npm i -g @nestjs/cli@8.2.4
 
 ENV DOCKERIZE_VERSION v0.6.1
