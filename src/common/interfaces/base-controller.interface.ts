@@ -1,5 +1,5 @@
 import { DeepPartial } from 'typeorm';
-import { BaseQuerystringDto } from '../../base-query-string.dto';
+import { BaseQuerystringDto } from '../bases/base-query-string.dto';
 
 export interface IBaseController<
   T,

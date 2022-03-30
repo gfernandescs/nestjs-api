@@ -1,5 +1,5 @@
 import { DeepPartial } from 'typeorm';
-import { BaseQuerystringDto } from '../../base-query-string.dto';
+import { BaseQuerystringDto } from '../bases/base-query-string.dto';
 import {
   Body,
   Delete,
@@ -14,7 +14,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { AbstractValidationPipe } from '../pipes/abstract-validation.pipe';
-import { BaseService } from '../../base.service';
+import { BaseService } from '../bases/base.service';
 import { IBaseController } from '../interfaces/base-controller.interface';
 
 export function ControllerFactory<

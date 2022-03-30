@@ -1,4 +1,4 @@
-import { BaseQuerystringDto } from '../../base-query-string.dto';
+import { BaseQuerystringDto } from '../../common/bases/base-query-string.dto';
 import { IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
