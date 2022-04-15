@@ -1,19 +1,11 @@
-import {
-  Entity,
-  Column,
-  BeforeInsert,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Entity, Column, BeforeInsert } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcryptjs';
 import { userRoles } from '../constants';
-import { Exclude } from 'class-transformer';
+import { BaseEntity } from '../../common/bases/base.entity';
 
 @Entity({ name: 'users' })
-export class User {
-  @Column({ primary: true, generated: 'uuid' })
-  id: number;
-
+export class User extends BaseEntity {
   @Column()
   name: string;
 
@@ -29,14 +21,6 @@ export class User {
 
   @Column({ length: 20, nullable: true })
   phone?: string;
-
-  @Column()
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
-
-  @Column()
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
 
   @BeforeInsert()
   async hashPassword() {
