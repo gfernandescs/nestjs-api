@@ -32,6 +32,23 @@
 $ npm install
 ```
 
+## Environmental variables
+
+```bash
+# use values found in '.env.example' in '.env' file
+################################### DATABASE PARAMS ##################################
+DB_HOST=
+DB_PORT=
+DB_USERNAME=
+DB_PASSWORD=
+DB_NAME=
+DB_LOGGING=
+
+################################### JWT APPLICATION PARAMS ##################################
+JWT_SECRET_KEY=
+JWT_ACCESS_TOKEN_EXPIRES_IN=
+```
+
 ## Running the app
 
 ```bash
