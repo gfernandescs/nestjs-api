@@ -45,6 +45,32 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Running the app and database by docker
+
+```bash
+# local
+$ sudo docker-compose -f docker-compose.local.yml up
+
+# access docker server
+$ sudo docker exec -it nestjs-api bash
+```
+
+## Migration
+
+```bash
+# build
+$ npm run build
+
+# generate typeOrm migration
+$ npm typeorm migration:generate -- -n "migration name"
+
+# build
+$ npm run build
+
+# run migration
+$ npm typeorm migration:run
+```
+
 ## Test
 
 ```bash
