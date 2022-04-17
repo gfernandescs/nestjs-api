@@ -74,13 +74,13 @@ export function ControllerFactory<
       @Param('uuid', new ParseUUIDPipe()) uuid: string,
       @Body() data: updateDTO,
     ) {
-      return this.service.update(uuid, data);
+      return this.service.update({ id: uuid }, data);
     }
 
     @Delete(':uuid')
     @HttpCode(204)
     remove(@Param('uuid', new ParseUUIDPipe()) uuid: string) {
-      return this.service.remove(uuid);
+      return this.service.remove({ id: uuid });
     }
 
     getFilters(queryString: queryStringDTO) {
