@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: ErrorsInterceptor },
   ],
 })
 export class AppModule {}
