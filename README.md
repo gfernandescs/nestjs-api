@@ -79,13 +79,13 @@ $ sudo docker exec -it nestjs-api bash
 $ npm run build
 
 # generate typeOrm migration
-$ npm typeorm migration:generate -- -n "migration name"
+$ npm run typeorm migration:generate -- -n "migration name"
 
 # build
 $ npm run build
 
 # run migration
-$ npm typeorm migration:run
+$ npm run typeorm migration:run
 ```
 
 ## Test
